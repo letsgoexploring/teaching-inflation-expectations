@@ -1,4 +1,4 @@
-# Inflation Expectations Experiment
+# Teaching Inflation Expectations
 
 This repository contains replication materials for:
 
