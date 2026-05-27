@@ -1,0 +1,131 @@
+{{ block title }}
+  Year {{ forecast_year }}{% if is_practice %} — Practice (unscored){% endif %}
+{{ endblock }}
+
+{{ block content }}
+
+{% if is_practice %}
+<div class="alert alert-info py-2" style="font-size:0.85rem;">
+  <strong>Practice round</strong> — does not count toward your score.
+</div>
+{% endif %}
+
+<div class="progress mb-3" style="height:5px;">
+  <div id="progress-fill" class="progress-bar bg-warning" role="progressbar" style="width:100%;"></div>
+</div>
+
+<!-- History table -->
+<p class="mb-1"><strong>Recent macroeconomic data</strong></p>
+<div style="overflow-x:auto;">
+<table class="table table-sm table-bordered mb-2" style="font-size:0.85rem;">
+  <thead class="table-light">
+    <tr>
+      <th>Year</th>
+      <th>Inflation</th>
+      <th>Unemployment</th>
+      <th>Fed funds</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in history %}
+    <tr {% if row.is_last %}class="table-warning fw-bold"{% endif %}>
+      <td>{{ row.label }}</td>
+      <td>{{ row.inflation }}%</td>
+      <td>{{ row.unemp }}%</td>
+      <td>{{ row.fed_funds }}%</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<!-- Sparkline chart -->
+<div style="max-width:480px; margin-bottom:1rem;">
+  <canvas id="inflationChart" height="160"></canvas>
+</div>
+
+<!-- Forecast prompt -->
+<p class="mb-1"><strong>Forecast inflation for Year {{ forecast_year }}{% if is_practice %} (practice — unscored){% endif %}:</strong></p>
+
+{{ formfields }}
+{{ next_button }}
+
+<!-- Numeric keyboard on mobile -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var input = document.querySelector('input[name="forecast"]');
+    if (input) {
+        input.setAttribute('inputmode', 'decimal');
+        input.setAttribute('pattern', '[0-9]*\\.?[0-9]*');
+    }
+});
+</script>
+
+<!-- Timer progress bar -->
+<script>
+(function(){
+  var s = {{ remaining_seconds }}, total = {{ time_limit }};
+  var bar = document.getElementById('progress-fill');
+  bar.style.width = Math.round(s/total*100)+'%';
+  var t = setInterval(function(){
+    s = Math.max(0, s-1);
+    bar.style.width = Math.round(s/total*100)+'%';
+    if(s <= 60){ bar.classList.remove('bg-warning'); bar.classList.add('bg-danger'); }
+    if(s === 0) clearInterval(t);
+  }, 1000);
+})();
+</script>
+
+<!-- Chart.js sparkline -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  var raw = {{ chart_data }};
+  var ctx = document.getElementById('inflationChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: raw.labels,
+      datasets: [
+        {
+          label: 'Actual inflation',
+          data: raw.actuals,
+          borderColor: '#0d6efd',
+          backgroundColor: 'rgba(13,110,253,0.08)',
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          tension: 0.3,
+          fill: false,
+        },
+        {
+          label: 'Your forecast',
+          data: raw.forecasts,
+          borderColor: '#fd7e14',
+          borderDash: [5,3],
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          tension: 0.3,
+          fill: false,
+          spanGaps: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { ticks: { font: { size: 10 } } },
+        y: {
+          ticks: { font: { size: 10 }, callback: function(v){ return (Math.round(v*10)/10)+'%'; } },
+          title: { display: false }
+        }
+      }
+    }
+  });
+})();
+</script>
+
+{{ endblock }}

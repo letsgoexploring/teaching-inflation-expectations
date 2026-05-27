@@ -1,0 +1,32 @@
+{{ block title }}Your Results{{ endblock }}
+
+{{ block content }}
+
+<h5>Forecasting performance</h5>
+<table class="table table-sm table-bordered" style="max-width:420px;">
+  <tbody>
+    <tr>
+      <td>Scored years completed</td>
+      <td><strong>{{ completed_scored_rounds }}</strong></td>
+    </tr>
+    <tr>
+      <td>Your mean squared error (MSE)</td>
+      <td><strong>{% if mse != None %}{{ mse }}{% else %}Not available{% endif %}</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="text-muted" style="font-size:0.85rem;">
+  Lower MSE = more accurate forecasts. The class leaderboard will be shown at the end of the session.
+</p>
+
+{% if leaderboard_opt_in %}
+<div class="alert alert-success" style="font-size:0.9rem;">
+  You are entered in the leaderboard as: <strong>{{ leaderboard_name }}</strong>
+</div>
+{% endif %}
+
+<hr>
+<p>Thank you for participating. You may close this application.</p>
+
+{{ endblock }}

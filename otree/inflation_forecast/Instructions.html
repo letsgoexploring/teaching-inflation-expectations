@@ -1,0 +1,39 @@
+{{ block title }}Instructions (1 of 2){{ endblock }}
+{{ block content }}
+
+<p>
+  Please read these instructions carefully before proceeding.
+</p>
+
+<p>
+  You are participating in a forecasting activity using historical data from an actual economy.
+  The activity consists of <strong>20 sequential years</strong> of data. Each year, you will be shown
+  a table of macroeconomic indicators and asked to forecast the inflation rate for the
+  <em>following</em> year. After submitting your forecast, you will immediately learn the actual
+  outcome and how close your forecast was. You then move on to the next year in the sequence.
+</p>
+
+<p>The data shown each year are:</p>
+<ul>
+  <li><strong>Inflation rate</strong> (%)</li>
+  <li><strong>Unemployment rate</strong> (%)</li>
+  <li><strong>Federal funds rate</strong> (%)</li>
+</ul>
+
+<p>Your task is to <strong>forecast the inflation rate for the upcoming year</strong> (in percent). Forecasts must be between <strong>–5.0%</strong> and <strong>15.0%</strong>.</p>
+
+<p>Please take the activity seriously and do your best to forecast accurately. Your effort helps make the results meaningful for the class discussion.</p>
+
+<hr>
+
+<ul>
+  <li>Years 1–2 are <strong>practice</strong> (unscored) — use them to get familiar with the interface.</li>
+  <li>Years 3–20 are <strong>scored</strong>. Your score is your <strong>mean squared error (MSE)</strong> — lower is better. MSE is explained on the next screen.</li>
+  <li>The total time limit is <strong>{{ time_limit_minutes }} minutes</strong>, starting from your first forecasting screen.</li>
+  <li><strong>Grading:</strong> Your forecasting performance does not affect your grade. You receive full participation credit for completing the activity and reaching the final results screen.</li>
+  <li><strong>If you get interrupted:</strong> do not close your browser. If you need to pause, leave the tab open and return to it. Reopening the link in a new tab will start you over from the beginning.</li>
+</ul>
+
+{{ next_button }}
+
+{{ endblock }}

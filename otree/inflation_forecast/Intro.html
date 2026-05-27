@@ -1,0 +1,27 @@
+{{ block title }}Welcome{{ endblock }}
+{{ block content }}
+
+<p>This is a short macroeconomics forecasting activity. It should take about 20 minutes.</p>
+
+<hr>
+
+<p><strong>Class leaderboard</strong></p>
+<p>
+  At the end of class, the top forecasters will be recognized on the class leaderboard.
+  Participation is optional.
+</p>
+{{ formfield 'leaderboard_opt_in' }}
+
+<br>
+
+<p><strong>Leaderboard display name</strong></p>
+<p>
+  If you opt in to the leaderboard, enter a name or nickname below.
+  Leave blank to appear as "Anonymous."
+</p>
+{{ formfield 'leaderboard_name' }}
+
+<br>
+{{ next_button }}
+
+{{ endblock }}

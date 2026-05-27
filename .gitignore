@@ -1,0 +1,65 @@
+# =============================================================================
+# oTree / Python / Heroku — .gitignore
+# =============================================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.pyo
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+.conda/
+
+# --- oTree ---
+# Local SQLite database (never commit; PostgreSQL is used in production)
+db.sqlite3
+_static/
+_static_root/
+_collected_static/
+otree_tmp/
+
+# --- Credentials ---
+.env
+.env.local
+*.env
+
+# --- Notebooks ---
+.ipynb_checkpoints/
+python/.ipynb_checkpoints/
+
+# --- Generated figures (reproducible from the notebook) ---
+img/
+
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# --- Editor and IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Heroku runtime ---
+.heroku/
+
+# --- Logs ---
+*.log
+logs/

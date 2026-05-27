@@ -1,0 +1,107 @@
+{{ block title }}
+  Feedback — Year {{ player.round_number }}{% if is_practice %} (Practice){% endif %}
+{{ endblock }}
+
+{{ block content }}
+
+<script>
+(function(){
+  var s = {{ remaining_seconds }}, total = {{ time_limit }};
+  var bar = document.getElementById('progress-fill');
+  bar.style.width = Math.round(s/total*100)+'%';
+})();
+</script>
+
+{% if is_practice %}
+<div class="alert alert-info py-2" style="font-size:0.85rem;">
+  <strong>Practice round</strong> — does not count toward your score.
+</div>
+{% endif %}
+
+<table class="table table-sm table-bordered mb-3" style="max-width:380px; font-size:0.9rem;">
+  <tbody>
+    <tr>
+      <td>Your forecast</td>
+      <td><strong>{{ forecast_display }}%</strong></td>
+    </tr>
+    <tr>
+      <td>Actual inflation</td>
+      <td><strong>{{ actual_display }}%</strong></td>
+    </tr>
+    <tr>
+      <td>Forecast error</td>
+      <td>{{ error_display }}%</td>
+    </tr>
+    <tr>
+      <td>Squared error</td>
+      <td>{{ sq_error_display }}</td>
+    </tr>
+    <tr>
+      <td>You</td>
+      <td><strong>{{ over_under }}</strong></td>
+    </tr>
+    <tr class="table-light">
+      <td><strong>Running MSE</strong> <small class="text-muted">(scored rounds)</small></td>
+      <td><strong>{% if mse != None %}{{ mse }}{% else %}—{% endif %}</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Updated chart now including this round's result -->
+<div style="max-width:480px; margin-bottom:1rem;">
+  <canvas id="inflationChart" height="160"></canvas>
+</div>
+
+{{ next_button }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  var raw = {{ chart_data }};
+  var ctx = document.getElementById('inflationChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: raw.labels,
+      datasets: [
+        {
+          label: 'Actual inflation',
+          data: raw.actuals,
+          borderColor: '#0d6efd',
+          backgroundColor: 'rgba(13,110,253,0.08)',
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          tension: 0.3,
+          fill: false,
+        },
+        {
+          label: 'Your forecast',
+          data: raw.forecasts,
+          borderColor: '#fd7e14',
+          borderDash: [5,3],
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          tension: 0.3,
+          fill: false,
+          spanGaps: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { ticks: { font: { size: 10 } } },
+        y: {
+          ticks: { font: { size: 10 }, callback: function(v){ return (Math.round(v*10)/10)+'%'; } }
+        }
+      }
+    }
+  });
+})();
+</script>
+
+{{ endblock }}

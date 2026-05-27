@@ -1,0 +1,49 @@
+{{ block title }}Instructions (2 of 2) — Scoring{{ endblock }}
+{{ block content }}
+
+<p>Your score is your <strong>mean squared error (MSE)</strong> across the 18 scored years.</p>
+
+<p>For each year, your squared error is:</p>
+<p style="margin-left:1.2rem;">
+  <strong>Squared error = (Your forecast − Actual inflation)<sup>2</sup></strong>
+</p>
+
+<p>Your MSE is the average of these squared errors. <strong>Lower MSE = better forecasting.</strong></p>
+
+<hr>
+
+<p><strong>Example</strong></p>
+<p>Suppose actual inflation turns out to be <strong>4.0%</strong>.</p>
+
+<table class="table table-sm table-bordered" style="max-width:440px; font-size:0.9rem;">
+  <thead class="table-light">
+    <tr>
+      <th>Your forecast</th>
+      <th>Error</th>
+      <th>Squared error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>6.0% <span class="text-muted">(over by 2)</span></td>
+      <td>+2.0</td>
+      <td><strong>4.0</strong></td>
+    </tr>
+    <tr>
+      <td>4.0% <span class="text-muted">(exact)</span></td>
+      <td>0.0</td>
+      <td><strong>0.0</strong></td>
+    </tr>
+    <tr>
+      <td>2.0% <span class="text-muted">(under by 2)</span></td>
+      <td>−2.0</td>
+      <td><strong>4.0</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notice that <strong>over-forecasting and under-forecasting by the same amount are penalized equally</strong> — squaring the error removes the sign. The only way to reduce your score is to forecast more accurately.</p>
+
+{{ next_button }}
+
+{{ endblock }}

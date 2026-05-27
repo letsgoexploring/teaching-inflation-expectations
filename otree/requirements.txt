@@ -1,0 +1,4 @@
+# IF YOU MODIFY THIS FILE, remove the oTree-may-overwrite comment below.
+# oTree-may-not-overwrite-this-file
+otree==6.0.10
+psycopg2-binary>=2.8.4
