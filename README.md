@@ -1,54 +1,68 @@
 # Teaching Inflation Expectations
 
-This repository contains replication materials for:
+Materials for:
 
-> Jenkins, Brian C. (2026). "Teaching Inflation Expectations with Professional Forecast Data and a Classroom Experiment." Working paper. https://github.com/letsgoexploring/teaching-inflation-expectations/blob/main/paper/Jenkins_Inflation_Expectations.pdf
+> Jenkins, Brian C. (2026). "Teaching Inflation Expectations with Professional Forecast Data and a Classroom Experiment." Working paper. [paper/Jenkins_Inflation_Expectations.pdf](paper/Jenkins_Inflation_Expectations.pdf)
 
-If you use any of these materials in your own research or teaching, please cite the paper above.
+The paper describes low-cost resources for teaching how inflation expectations are measured and how they behave, using survey data on professional and household forecasts and a short classroom forecasting experiment. If you use these materials in your teaching or research, please cite the paper.
 
-This repository contains two main resources:
+## What is here
 
-1. **A dataset for teaching** — historical U.S. inflation, professional forecasts, and interest rates, provided as ready-to-use CSV files along with the Python code used to construct them from FRED and the Philadelphia Fed's Survey of Professional Forecasters.
-2. **An oTree classroom experiment** — a browser-based forecasting experiment in which students predict one-period-ahead inflation using historical macroeconomic data, deployable to Heroku.
+| Resource | Where | What it is |
+|---|---|---|
+| Paper | [`paper/`](paper/) | Current draft of the paper |
+| Teaching dataset | [`csv/`](csv/) | SPF inflation forecasts, actual GDP deflator inflation, and the one-year Treasury rate, at annual and quarterly frequencies |
+| Homework questions | [`homework/`](homework/) | Sample homework questions that use the annual dataset |
+| oTree experiment | [`otree/`](otree/) | Browser-based inflation forecasting experiment; see [`SETUP.md`](SETUP.md) to deploy it |
+| Spreadsheet version | [`worksheet/`](worksheet/) | Excel worksheet for running the experiment in class without oTree |
+| Code | [`python/`](python/) | Notebooks that build the dataset and produce the paper's figures and tables |
 
----
+## The teaching dataset
 
-## Repository Contents
+Two CSV files in [`csv/`](csv/):
+
+- `inflation_forecast_data_annual.csv`
+- `inflation_forecast_data_quarterly.csv`
+
+Each has three columns:
+
+- `deflator inflation - forecast`: median one-year-ahead GDP deflator inflation forecast from the Federal Reserve Bank of Philadelphia's Survey of Professional Forecasters (SPF)
+- `deflator inflation - actual`: actual GDP deflator inflation over the following year (FRED series GDPDEF for quarterly data, A191RD3A086NBEA for annual data)
+- `nominal interest`: one-year Treasury rate (FRED series GS1), averaged over the months of each period
+
+Each row is dated by when the forecast was made. The row for 2020 holds the forecast made in 2020 and actual inflation from 2020 to 2021. So, row by row:
+
+- the *ex ante* real interest rate is `nominal interest` minus `deflator inflation - forecast`
+- the forecast error is `deflator inflation - forecast` minus `deflator inflation - actual` (positive means the forecast was too high)
+
+Students can download the annual file directly from:
 
 ```
-teaching-inflation-expectations/
-├── paper/
-│   └── Jenkins_Inflation_Expectations.pdf   # Working paper
-├── otree/                                    # oTree classroom experiment
-│   ├── inflation_forecast/
-│   │   ├── __init__.py
-│   │   ├── models.py
-│   │   ├── Intro.html
-│   │   ├── Instructions.html
-│   │   ├── InstructionsMSE.html
-│   │   ├── Forecast.html
-│   │   ├── Feedback.html
-│   │   ├── Survey.html
-│   │   ├── Results.html
-│   │   └── inflation_data.csv               # Historical macro data used by the experiment
-│   ├── settings.py
-│   ├── requirements.txt
-│   ├── Procfile
-│   └── .python-version
-├── python/
-│   └── inflation_forecast_data.ipynb         # Builds the CSV datasets from FRED + SPF
-├── csv/
-│   ├── inflation_forecast_data_annual.csv    # Annual SPF forecast data
-│   └── inflation_forecast_data_quarterly.csv # Quarterly SPF forecast data
-├── LICENSE
-├── README.md
-└── SETUP.md                                  # Local and Heroku deployment instructions
+https://raw.githubusercontent.com/letsgoexploring/teaching-inflation-expectations/refs/heads/main/csv/inflation_forecast_data_annual.csv
 ```
 
-See [`SETUP.md`](SETUP.md) for instructions on running the oTree experiment locally and deploying it to Heroku.
+The data are rebuilt from the original sources by [`python/inflation_forecast_data.ipynb`](python/inflation_forecast_data.ipynb). See the paper for details and caveats, including data revisions and the SPF's switch from the GNP deflator before 1992.
 
----
+## The experiment
+
+Students forecast U.S. inflation one year ahead for 20 rounds covering 1970 to 1989, without being told the years. Each round shows the previous five years of inflation, unemployment, and the federal funds rate. After each forecast, students see actual inflation, their forecast error, and their running mean squared error. The first two rounds are practice. The experiment takes about 20 minutes and works on phones and laptops.
+
+**With oTree.** The app is in [`otree/`](otree/). [`SETUP.md`](SETUP.md) explains how to deploy it to Heroku, create a session, distribute participant links, and export the data. The historical data shown to students are in `otree/inflation_forecast/inflation_data.csv`.
+
+**Without oTree.** Show the data for each round on slides, have students record forecasts in the worksheet, then reveal actual inflation. The [`worksheet/`](worksheet/) folder has:
+
+- `forecasting_worksheet.xlsx`: blank worksheet for students, with formulas for the forecast error, squared error, and running MSE
+- `forecasting_worksheet_example.xlsx`: the partly completed example shown in the paper
+
+To avoid errors from mistyped values, lock the actual inflation column or recompute forecast errors from the submitted forecasts.
+
+## Code
+
+[`python/`](python/) contains two notebooks:
+
+- `inflation_forecast_data.ipynb` downloads SPF and FRED data and writes the CSV files in [`csv/`](csv/).
+- `experiment_data_analysis.ipynb` produces the paper's figures and tables. It needs the student forecast data, which are **not** included in this repository: under the study's IRB protocol, the de-identified experiment data are accessible only to the study team.
 
 ## License
 
-This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for details.
+MIT License. See [`LICENSE`](LICENSE).

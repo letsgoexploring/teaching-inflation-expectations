@@ -198,6 +198,12 @@ Heroku redeploys automatically. Active sessions are not interrupted by redeploym
 
 ---
 
+## Exporting Data
+
+After the session closes, log in to the admin panel and open the **Data** tab. Download the CSV for the `inflation_forecast` app. It has one row per participant per round, with the forecast, actual inflation, forecast error, squared error, a timeout flag, and the post-experiment survey responses. Export the data before scaling down or removing the database.
+
+---
+
 ## Scaling Down After the Experiment
 
 To avoid ongoing charges after your experiment is complete, you can scale down the dyno and remove the database:
@@ -207,7 +213,7 @@ heroku ps:scale web=0           # Turns off the dyno (stops billing for compute)
 heroku addons:destroy heroku-postgresql:essential-0  # Removes the database
 ```
 
-**Warning:** Destroying the database is permanent. Export your data first (see the README's Exporting Data section).
+**Warning:** Destroying the database is permanent. Export your data first (see [Exporting Data](#exporting-data) below).
 
 ---
 
