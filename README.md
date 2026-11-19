@@ -11,15 +11,15 @@ The paper describes low-cost resources for teaching how inflation expectations a
 | Resource | Where | What it is |
 |---|---|---|
 | Paper | [`paper/`](paper/) | Current draft of the paper |
-| Teaching dataset | [`csv/`](csv/) | SPF inflation forecasts, actual GDP deflator inflation, and the one-year Treasury rate, at annual and quarterly frequencies |
+| Teaching dataset | [economic-data repository](https://github.com/letsgoexploring/economic-data/tree/main/inflation-forecasts-and-interest-rates) | SPF inflation forecasts, actual GDP deflator inflation, and the one-year Treasury rate, at annual and quarterly frequencies |
 | Homework questions | [`homework/`](homework/) | Sample homework questions that use the annual dataset |
 | oTree experiment | [`otree/`](otree/) | Browser-based inflation forecasting experiment; see [`SETUP.md`](SETUP.md) to deploy it |
 | Spreadsheet version | [`worksheet/`](worksheet/) | Excel worksheet for running the experiment in class without oTree |
-| Code | [`python/`](python/) | Notebooks that build the dataset and produce the paper's figures and tables |
+| Code | [`python/`](python/) | Notebook that produces the paper's figures and tables |
 
 ## The teaching dataset
 
-Two CSV files in [`csv/`](csv/):
+The dataset is maintained and periodically updated in the [`inflation-forecasts-and-interest-rates`](https://github.com/letsgoexploring/economic-data/tree/main/inflation-forecasts-and-interest-rates) folder of my economic-data repository, along with the notebook that builds it from the original sources. It has two CSV files:
 
 - `inflation_forecast_data_annual.csv`
 - `inflation_forecast_data_quarterly.csv`
@@ -38,10 +38,10 @@ Each row is dated by when the forecast was made. The row for 2020 holds the fore
 Students can download the annual file directly from:
 
 ```
-https://raw.githubusercontent.com/letsgoexploring/teaching-inflation-expectations/refs/heads/main/csv/inflation_forecast_data_annual.csv
+https://raw.githubusercontent.com/letsgoexploring/economic-data/refs/heads/main/inflation-forecasts-and-interest-rates/csv/inflation_forecast_data_annual.csv
 ```
 
-The data are rebuilt from the original sources by [`python/inflation_forecast_data.ipynb`](python/inflation_forecast_data.ipynb). See the paper for details and caveats, including data revisions and the SPF's switch from the GNP deflator before 1992.
+See the paper for details and caveats, including data revisions and the SPF's switch from the GNP deflator before 1992.
 
 ## The experiment
 
@@ -58,10 +58,7 @@ To avoid errors from mistyped values, lock the actual inflation column or recomp
 
 ## Code
 
-[`python/`](python/) contains two notebooks:
-
-- `inflation_forecast_data.ipynb` downloads SPF and FRED data and writes the CSV files in [`csv/`](csv/).
-- `experiment_data_analysis.ipynb` produces the paper's figures and tables. It needs the student forecast data, which are **not** included in this repository: under the study's IRB protocol, the de-identified experiment data are accessible only to the study team.
+[`python/experiment_data_analysis.ipynb`](python/experiment_data_analysis.ipynb) produces the paper's figures and tables. It needs the student forecast data, which are **not** included in this repository: under the study's IRB protocol, the de-identified experiment data are accessible only to the study team.
 
 ## License
 

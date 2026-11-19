@@ -11,9 +11,32 @@ You will need:
 - A [Heroku account](https://signup.heroku.com/) (free to create; deployment costs ~$10–15/month for a typical classroom run of a few days)
 - A credit card on file with Heroku (required for paid dynos and the PostgreSQL add-on)
 - [Git](https://git-scm.com/downloads) installed
-- The experiment code cloned to your computer (see the README for setup)
+- Python 3.11 installed (only needed to test the experiment on your own computer first)
+
+Clone this repository and move into it:
+
+```bash
+git clone https://github.com/letsgoexploring/teaching-inflation-expectations.git
+cd teaching-inflation-expectations
+```
+
+All commands below are run from this folder, the root of the repository. The oTree app itself is in the `otree/` subfolder.
 
 Estimated time: 20–30 minutes for a first deployment.
+
+---
+
+## Optional: Test the Experiment Locally
+
+Before deploying, you can run the experiment on your own computer:
+
+```bash
+cd otree
+pip install -r requirements.txt
+otree devserver
+```
+
+Open `http://localhost:8000` in a browser, click **Inflation Forecasting** under Demo, and play through it. Press `Ctrl+C` to stop the server, then `cd ..` to return to the repository root.
 
 ---
 
@@ -43,7 +66,7 @@ This opens a browser window. Log in with your Heroku account credentials. When c
 
 ## Step 3: Create a Heroku App
 
-From the root of the project directory:
+From the root of the repository:
 
 ```bash
 heroku create your-app-name
@@ -80,13 +103,14 @@ Database has been created and is available
 
 ## Step 5: Set Environment Variables
 
-oTree needs three environment variables for production:
+oTree needs four environment variables for production:
 
 ```bash
-heroku config:set OTREE_ADMIN_PASSWORD=yourpassword OTREE_PRODUCTION=1 OTREE_SECRET_KEY=yoursecretkey
+heroku config:set OTREE_ADMIN_PASSWORD=yourpassword OTREE_PRODUCTION=1 OTREE_AUTH_LEVEL=STUDY OTREE_SECRET_KEY=yoursecretkey
 ```
 
 - **`OTREE_ADMIN_PASSWORD`** — the password for the oTree admin panel. Choose something secure. You will use this to log in at `https://your-app-name.herokuapp.com/`.
+- **`OTREE_AUTH_LEVEL=STUDY`**: password-protects the admin panel and only lets people take part through a participant link. **Do not skip this.** Without it, oTree leaves the admin panel, including the data export, open to anyone who finds your app's URL, even if you set a password.
 - **`OTREE_PRODUCTION=1`** — switches oTree from development to production mode, enabling PostgreSQL and disabling debug output.
 - **`OTREE_SECRET_KEY`** — a secret key used by oTree for cryptographic signing. Generate one with:
 
@@ -94,7 +118,7 @@ heroku config:set OTREE_ADMIN_PASSWORD=yourpassword OTREE_PRODUCTION=1 OTREE_SEC
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-You can verify all three were set:
+You can verify all four were set:
 
 ```bash
 heroku config
@@ -111,25 +135,15 @@ SECRET_KEY = environ.get('OTREE_SECRET_KEY')
 
 ## Step 6: Push the Code to Heroku
 
-Heroku deploys via Git. If you haven't committed the project to Git yet:
+Heroku deploys via Git. Because the oTree app is in the `otree/` subfolder, push only that folder to Heroku:
 
 ```bash
-git init
-git add .
-git commit -m "initial deploy"
+git subtree push --prefix otree heroku main
 ```
 
-Then push to Heroku:
+Run this from the repository root. (A plain `git push heroku main` would send the whole repository, and Heroku would fail to find `requirements.txt` and the `Procfile`, which are inside `otree/`.)
 
-```bash
-git push heroku main
-```
-
-If your default branch is named `master` rather than `main`:
-
-```bash
-git push heroku master
-```
+If you have edited any files, commit them first (`git add .` then `git commit -m "describe what changed"`), since only committed changes are pushed.
 
 Heroku will:
 1. Detect that this is a Python app
@@ -191,7 +205,7 @@ Whenever you edit files locally:
 ```bash
 git add .
 git commit -m "describe what changed"
-git push heroku main
+git subtree push --prefix otree heroku main
 ```
 
 Heroku redeploys automatically. Active sessions are not interrupted by redeployment, but it's best to redeploy before a session starts.
@@ -242,7 +256,8 @@ You should see one `web` dyno with state `up`.
 | App shows "Application Error" | Crash on startup | Check `heroku logs --tail` for the Python traceback |
 | Admin password not accepted | `OTREE_ADMIN_PASSWORD` not set | Run `heroku config` to verify; re-run Step 5 if missing |
 | Database connection error | `DATABASE_URL` not set | Verify the Postgres add-on was created (`heroku addons`) |
-| Push rejected | Git branch name mismatch | Try `git push heroku master` instead of `main` |
+| Build fails with "No default language could be detected" | The whole repository was pushed instead of the `otree/` folder | Deploy with `git subtree push --prefix otree heroku main` (Step 6) |
+| Anyone can open the admin panel | `OTREE_AUTH_LEVEL` not set | Run `heroku config:set OTREE_AUTH_LEVEL=STUDY` |
 | `ModuleNotFoundError: psycopg2` | Wrong psycopg2 package | Ensure `requirements.txt` has `psycopg2-binary`, not `psycopg2` |
 | Python version error | Wrong Python installed | Confirm `.python-version` contains `3.11` |
 
